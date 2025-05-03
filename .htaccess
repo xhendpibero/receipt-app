@@ -1,0 +1,13 @@
+# Enable rewriting
+RewriteEngine On
+
+# If the request is for an existing file or folder, serve it
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# All other requests go to index.php
+RewriteRule ^ index.php [L,QSA]
+
+# Also catch any 404 errors and redirect to index.php
+ErrorDocument 404 /index.php    
