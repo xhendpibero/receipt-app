@@ -9,7 +9,7 @@
     $filters = [
         'category' => $_GET['category'] ?? null,
         'rating' => $_GET['rating'] ?? null,
-        'author' => $_GET['author'] ?? null
+        'author' => $_SESSION['user_id'] ?? null
     ];
     
     // Get filtered recipes
@@ -21,7 +21,6 @@
     
     // Current URL without query parameters
     $baseUrl = strtok($_SERVER["REQUEST_URI"], '?');
-
     include 'components/header.php';
 ?>
 
@@ -29,8 +28,8 @@
         <div class="page-title">
             <div class="row" style="place-content: center">
                 <div class="col-12 col-xl-3 col-lg-4  order-md-1 order-last">
-                    <h3>List All Recipe</h3>
-                    <p class="text-subtitle text-muted">The best recipe only in this website</p>
+                    <h3>All Recipe</h3>
+                    <a class="text-subtitle" href='#' data-bs-toggle='modal' data-bs-target='#recipeAddForm'>Add Recipe</p>
                 </div>
                 <div class="col-12 col-xl-5 col-lg-6 order-md-2 order-first align-content-center">
                     <!-- <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
@@ -86,29 +85,7 @@
                 </div>
             </div>
         </div>
-
-        <!-- Author Filter -->
-        <div class="btn-group mb-1">
-            <div class="dropdown icon-right">
-                <button class="btn <?php echo isset($_GET['author']) ? 'btn-success' : 'btn-primary'; ?> dropdown-toggle me-1 d-flex gap-2 align-items-center" 
-                        type="button"
-                        id="authorFilter" 
-                        data-bs-toggle="dropdown"
-                        aria-haspopup="true" 
-                        aria-expanded="false">
-                    Filter Author <i class="bi bi-person"></i>
-                </button>
-                <div class="dropdown-menu" aria-labelledby="authorFilter">
-                    <?php foreach ($authors as $author): ?>
-                        <a class="dropdown-item <?php echo ($filters['author'] == $author['id']) ? 'active' : ''; ?>"
-                           href="<?php echo $baseUrl . '?' . http_build_query(array_merge($filters, ['author' => $author['id']])); ?>">
-                            <?php echo htmlspecialchars($author['username']); ?>
-                        </a>
-                    <?php endforeach; ?>
-                </div>
-            </div>
-        </div>
-
+        
         <!-- Reset Filter -->
         <div class="btn-group mb-1">
             <div class="dropdown icon-right">
@@ -201,7 +178,16 @@
                                             <span class="ms-2">Category: <?php echo htmlspecialchars($recipe['category_name']); ?></span>
                                         <?php endif; ?>
                                     </div>
-                                    <button class="btn btn-light-primary">Read More</button>
+
+                                    <div class="d-flex gap-2">
+                                        <button class="btn btn-primary" onclick="openEditModal(<?php echo htmlspecialchars(json_encode($recipe)); ?>)" >Edit</button>
+                                        <!-- OR if using simple version -->
+                                        <button 
+                                            onclick="deleteRecipeSimple(<?php echo htmlspecialchars($recipe['id']); ?>)" 
+                                            class="btn btn-danger btn-sm">
+                                            Delete
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -214,5 +200,113 @@
         </section>
     </div>
 
+    <script>
+        // Add this to your existing JavaScript or create a new script
+        function deleteRecipe(recipeId) {
+            // Show confirmation dialog
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'Cancel'
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    try {
+                        // Show loading state
+                        Swal.fire({
+                            title: 'Deleting...',
+                            didOpen: () => {
+                                Swal.showLoading();
+                            },
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                            allowEnterKey: false
+                        });
+
+                        // Send delete request
+                        const response = await fetch('api/delete_recipe.php', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                id: recipeId
+                            })
+                        });
+
+                        const data = await response.json();
+
+                        if (data.success) {
+                            // Show success message
+                            Swal.fire({
+                                title: 'Deleted!',
+                                text: 'Your recipe has been deleted.',
+                                icon: 'success',
+                                timer: 2000,
+                                showConfirmButton: false
+                            }).then(() => {
+                                // Reload page or update UI
+                                window.location.reload();
+                            });
+                        } else {
+                            throw new Error(data.message || 'Failed to delete recipe');
+                        }
+                    } catch (error) {
+                        console.error('Delete error:', error);
+                        Swal.fire({
+                            title: 'Error!',
+                            text: error.message || 'Failed to delete recipe',
+                            icon: 'error'
+                        });
+                    }
+                }
+            });
+        }
+
+        // Alternative version with Toastify instead of SweetAlert2
+        function deleteRecipeSimple(recipeId) {
+            if (confirm('Are you sure you want to delete this recipe?')) {
+                fetch('api/delete_recipe.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        id: recipeId
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        Toastify({
+                            text: "Recipe deleted successfully!",
+                            duration: 3000,
+                            style: { background: 'linear-gradient(to right, #00b09b, #96c93d)' }
+                        }).showToast();
+                        
+                        // Reload page or update UI
+                        setTimeout(() => window.location.reload(), 1000);
+                    } else {
+                        throw new Error(data.message || 'Failed to delete recipe');
+                    }
+                })
+                .catch(error => {
+                    console.error('Delete error:', error);
+                    Toastify({
+                        text: "Error deleting recipe!",
+                        duration: 3000,
+                        style: { background: 'linear-gradient(to right, #ff5f6d, #ffc371)' }
+                    }).showToast();
+                });
+            }
+        }
+    </script>
+
 <?php
+    include 'components/modal-edit.php';
+
     include 'components/footer.php';

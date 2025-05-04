@@ -16,3 +16,16 @@ try {
 } catch (PDOException $e) {
     exit('DB Connect Error: ' . $e->getMessage());
 }
+
+setlocale(LC_TIME, 'id_ID');
+
+function displayQuillContent($html) {
+    $html = htmlspecialchars_decode($html);
+    return "<div class='quill-container'>
+              <div class='quill-content'>
+                $html
+              </div>
+            </div>";
+}
+
+require_once 'query.php';

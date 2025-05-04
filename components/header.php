@@ -4,16 +4,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vertical Navbar - Mazer Admin Dashboard</title>
+    <title>Home - Receipt APP</title>
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/bootstrap.css">
 
+    <link rel="stylesheet" href="assets/vendors/toastify/toastify.css">
+    <link rel="stylesheet" href="assets/vendors/quill/quill.bubble.css">
+    <link rel="stylesheet" href="assets/vendors/quill/quill.snow.css">
+    <link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bootstrap-4/bootstrap-4.css" rel="stylesheet">
+
     <link rel="stylesheet" href="assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
     <link rel="stylesheet" href="assets/vendors/bootstrap-icons/bootstrap-icons.css">
     <link rel="stylesheet" href="assets/css/app.css">
     <link rel="shortcut icon" href="assets/images/favicon.svg" type="image/x-icon">
+
+    <style>
+.quill-content {
+    max-width: 800px;
+    max-height: 300px; /* Adjust this value as needed */
+    margin: 0 auto;
+    line-height: 1.6;
+    overflow-y: auto;
+    position: relative;
+    padding: 4px;
+    padding-bottom: 40px; /* Extra padding for shadow */
+}
+
+/* Custom scrollbar for webkit browsers */
+.quill-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.quill-content::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.quill-content::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.quill-content::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Bottom shadow effect */
+.quill-content::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 40px; /* Height of shadow gradient */
+    background: linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 1) 100%
+    );
+    pointer-events: none; /* Allows scrolling through the shadow */
+}
+
+/* Only show shadow when content is scrollable */
+.quill-content.has-overflow::after {
+    display: block;
+}
+
+.quill-content:not(.has-overflow)::after {
+    display: none;
+}
+
+.quill-content p {
+    margin-bottom: 1em;
+}
+
+.quill-content ol,
+.quill-content ul {
+    padding-left: 2em;
+    margin-bottom: 1em;
+}
+
+.quill-content li {
+    margin-bottom: 0.5em;
+}
+
+/* Optional: Add a container with border */
+.quill-container {
+    border: 0px solid #ddd;
+    border-radius: 8px;
+    padding: 1px; /* Minimal padding to contain the shadow */
+    background: white;
+}
+</style>
 </head>
 
 <body>
@@ -32,30 +116,91 @@
                 </div>
                 <div class="sidebar-menu">
                     <ul class="menu">
-                        <li class="sidebar-title">Menu</li>
+                        <?php
+                            // Get the base directory dynamically
+                            function getBaseDir() {
+                                $baseDir = dirname($_SERVER['SCRIPT_NAME']);
+                                return rtrim($baseDir, '/') . '/';
+                            }
 
-                        <li class="sidebar-item active ">
-                            <a href="index.html" class='sidebar-link'>
-                                <i class="bi bi-grid-fill"></i>
-                                <span>Home</span>
-                            </a>
-                        </li>
+                            // Menu configuration array
+                            $baseDir = getBaseDir(); // This will give you '/recipe-app/' or '/' depending on your setup
+                            $menu = [
+                                'home' => [
+                                    'title' => 'Menu',
+                                    'items' => [
+                                        [
+                                            'name' => 'Home',
+                                            'link' => $baseDir,
+                                            'icon' => 'bi bi-grid-fill',
+                                            'path' => 'home'
+                                        ]
+                                    ]
+                                ],
+                                'recipe' => [
+                                    'title' => 'My Recipe',
+                                    'requires_auth' => true,
+                                    'items' => [
+                                        [
+                                            'name' => 'List Recipe',
+                                            'link' => $baseDir . 'my-recipe',
+                                            'icon' => 'bi bi-journal-richtext',
+                                            'path' => 'my-recipe'
+                                        ],
+                                        [
+                                            'name' => 'Add Recipe',
+                                            'link' => '#',
+                                            'icon' => 'bi bi-journal-plus',
+                                            'modal' => 'recipeAddForm',
+                                            'path' => 'add-recipe'
+                                        ]
+                                    ]
+                                ]
+                            ];
 
-                        <?php if (!empty($_SESSION['user_id'])) { ?>
-                        <li class="sidebar-title">My Recipe</li>
-                        <li class="sidebar-item ">
-                            <a href="index.html" class='sidebar-link'>
-                                <i class="bi bi-journal-richtext"></i>
-                                <span>List Recipe</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item ">
-                            <a href="#" data-bs-toggle="modal" data-bs-target="#exampleModalScrollable" class='sidebar-link'>
-                                <i class="bi bi-journal-plus"></i>
-                                <span>Add Recipe</span>
-                            </a>
-                        </li>
-                        <?php } ?>
+                            function isActive($menuPath) {
+                                // Get the current URL path
+                                $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+                                $baseDir = getBaseDir();
+                                
+                                // Remove base directory from current path
+                                $currentPath = str_replace($baseDir, '', $currentPath);
+                                $currentPath = trim($currentPath, '/');
+                                
+                                // If it's the home page
+                                if ($menuPath === 'home' && ($currentPath === '' || $currentPath === 'index.php')) {
+                                    return 'active';
+                                }
+                                
+                                // For other pages
+                                if ($currentPath === $menuPath) {
+                                    return 'active';
+                                }
+                                
+                                return '';
+                            }
+
+                            // Render menu
+                            foreach ($menu as $section) {
+                                if (isset($section['requires_auth']) && $section['requires_auth'] && empty($_SESSION['user_id'])) {
+                                    continue;
+                                }
+                                
+                                echo "<li class='sidebar-title'>{$section['title']}</li>";
+                                
+                                foreach ($section['items'] as $item) {
+                                    $modalAttr = isset($item['modal']) ? "data-bs-toggle='modal' data-bs-target='#{$item['modal']}'" : '';
+                                    ?>
+                                    <li class="sidebar-item <?php echo isActive($item['path']); ?>">
+                                        <a href="<?php echo $item['link']; ?>" <?php echo $modalAttr; ?> class='sidebar-link'>
+                                            <i class="<?php echo $item['icon']; ?>"></i>
+                                            <span><?php echo $item['name']; ?></span>
+                                        </a>
+                                    </li>
+                                    <?php
+                                }
+                            }
+                        ?>
 
                         <?php if (empty($_SESSION['user_id'])) { ?>
                         <li class="sidebar-title">Authentication</li>
@@ -101,8 +246,8 @@
                                     <a href="#" data-bs-toggle="dropdown" aria-expanded="false">
                                         <div class="user-menu d-flex">
                                             <div class="user-name text-end me-3">
-                                                <h6 class="mb-0 text-gray-600">John Ducky</h6>
-                                                <p class="mb-0 text-sm text-gray-600">Administrator</p>
+                                                <h6 class="mb-0 text-gray-600"><?php echo $_SESSION['username']; ?></h6>
+                                                <p class="mb-0 text-sm text-gray-600">User</p>
                                             </div>
                                             <div class="user-img d-flex align-items-center">
                                                 <div class="avatar avatar-md">
@@ -113,7 +258,7 @@
                                     </a>
                                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
                                         <li>
-                                            <h6 class="dropdown-header">Hello, John!</h6>
+                                            <h6 class="dropdown-header">Hello, <?php echo $_SESSION['username']; ?>!</h6>
                                         </li>
                                         <!-- <li><a class="dropdown-item" href="#"><i class="icon-mid bi bi-person me-2"></i> My
                                                 Profile</a></li>
@@ -136,74 +281,3 @@
             </header>
             <div id="main-content">
                 
-            <?php if (!empty($_SESSION['user_id'])) { ?>
-            <!--scrolling content Modal -->
-            <div class="modal fade" id="exampleModalScrollable" tabindex="-1" role="dialog"
-                aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-scrollable modal-lg modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalScrollableTitle">
-                                Add Recipe</h5>
-                            <button type="button" class="close" data-bs-dismiss="modal"
-                                aria-label="Close">
-                                <i data-feather="x"></i>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            
-
-                        <form action="#">
-                            <div class="modal-body">
-                                <label>Email: </label>
-                                <div class="form-group">
-                                    <input type="text" placeholder="Email Address"
-                                        class="form-control">
-                                </div>
-                                <label>Password: </label>
-                                <div class="form-group">
-                                    <input type="password" placeholder="Password"
-                                        class="form-control">
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-light-secondary"
-                                    data-bs-dismiss="modal">
-                                    <i class="bx bx-x d-block d-sm-none"></i>
-                                    <span class="d-none d-sm-block">Close</span>
-                                </button>
-                                <button type="button" class="btn btn-primary ml-1"
-                                    data-bs-dismiss="modal">
-                                    <i class="bx bx-check d-block d-sm-none"></i>
-                                    <span class="d-none d-sm-block">login</span>
-                                </button>
-                            </div>
-                        </form>
-
-                        <div class="card-body">
-                            <div class="form-group mb-3">
-                                <label for="exampleFormControlTextarea1" class="form-label">Example
-                                    textarea</label>
-                                <textarea class="form-control" id="exampleFormControlTextarea1"
-                                    rows="3"></textarea>
-                            </div>
-                        </div>
-
-
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-light-secondary"
-                                data-bs-dismiss="modal">
-                                <i class="bx bx-x d-block d-sm-none"></i>
-                                <span class="d-none d-sm-block">Close</span>
-                            </button>
-                            <button type="button" class="btn btn-primary ml-1"
-                                data-bs-dismiss="modal">
-                                <i class="bx bx-check d-block d-sm-none"></i>
-                                <span class="d-none d-sm-block">Accept</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <?php } ?>
