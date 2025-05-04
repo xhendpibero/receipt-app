@@ -9,8 +9,8 @@
         <div class="page-title">
             <div class="row" style="place-content: center">
                 <div class="col-12 col-xl-3 col-lg-4  order-md-1 order-last">
-                    <h3>List All Receipt</h3>
-                    <p class="text-subtitle text-muted">The best receipt only in this website</p>
+                    <h3>All Recipe</h3>
+                    <p class="text-subtitle text-link">Add Recipe</p>
                 </div>
                 <div class="col-12 col-xl-5 col-lg-6 order-md-2 order-first align-content-center">
                     <!-- <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
@@ -128,7 +128,7 @@
                                     </div>
                                         
                                     <div class="col-12 col-sm-12 col-md-8 mt-1">
-                                        <h4 class="card-title">Receipt Buah apa hayo</h4>
+                                        <h4 class="card-title">Recipe Buah apa hayo</h4>
                                         <p class="card-text">
                                             Gummies bonbon apple pie fruitcake icing biscuit apple pie jelly-o sweet
                                             roll. Toffee

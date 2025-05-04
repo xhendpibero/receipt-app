@@ -4,11 +4,11 @@ require_once 'api/config.php';
 
 // A simple router map: URI → handler
 $routes = [
-    '/receipt-app'            => 'home.php',
-    '/receipt-app/'            => 'home.php',
-    '/receipt-app/login'      => 'auth-login.php',
-    '/receipt-app/register'   => 'auth-register.php',
-    '/receipt-app/home'       => 'home.php',
+    '/recipe-app'            => 'home.php',
+    '/recipe-app/'            => 'home.php',
+    '/recipe-app/login'      => 'auth-login.php',
+    '/recipe-app/register'   => 'auth-register.php',
+    '/recipe-app/home'       => 'home.php',
     // … add your other routes …
 ];
 

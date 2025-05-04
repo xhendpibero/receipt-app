@@ -9,8 +9,8 @@
         <div class="page-title">
             <div class="row" style="place-content: center">
                 <div class="col-12 col-xl-3 col-lg-4  order-md-1 order-last">
-                    <h3>List All Receipt</h3>
-                    <p class="text-subtitle text-muted">The best receipt only in this website</p>
+                    <h3>List All Recipe</h3>
+                    <p class="text-subtitle text-muted">The best recipe only in this website</p>
                 </div>
                 <div class="col-12 col-xl-5 col-lg-6 order-md-2 order-first align-content-center">
                     <!-- <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
@@ -47,6 +47,24 @@
                                     id="dropdownMenuButtonIconRight" data-bs-toggle="dropdown"
                                     aria-haspopup="true" aria-expanded="false">
                                     Filter Rating <i class="bi bi-error-circle ml-50"></i>
+                                </button>
+                                <div class="dropdown-menu"
+                                    aria-labelledby="dropdownMenuButtonIconRight">
+                                    <a class="dropdown-item justify-content-between" href="#">Option 1
+                                        <i class="bi bi-bar-chart-alt-2 ml-50"></i></a>
+                                    <a class="dropdown-item justify-content-between" href="#">Option 2
+                                        <i class="bi bi-bell ml-50"></i></a>
+                                    <a class="dropdown-item justify-content-between" href="#">Option 3
+                                        <i class="bi bi-time ml-50"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="btn-group mb-1">
+                            <div class="dropdown icon-right">
+                                <button class="btn btn-primary dropdown-toggle me-1" type="button"
+                                    id="dropdownMenuButtonIconRight" data-bs-toggle="dropdown"
+                                    aria-haspopup="true" aria-expanded="false">
+                                    Filter Author <i class="bi bi-error-circle ml-50"></i>
                                 </button>
                                 <div class="dropdown-menu"
                                     aria-labelledby="dropdownMenuButtonIconRight">
@@ -128,7 +146,7 @@
                                     </div>
                                         
                                     <div class="col-12 col-sm-12 col-md-8 mt-1">
-                                        <h4 class="card-title">Receipt Buah apa hayo</h4>
+                                        <h4 class="card-title">Recipe Buah apa hayo</h4>
                                         <p class="card-text">
                                             Gummies bonbon apple pie fruitcake icing biscuit apple pie jelly-o sweet
                                             roll. Toffee

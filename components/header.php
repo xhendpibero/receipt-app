@@ -40,6 +40,23 @@
                                 <span>Home</span>
                             </a>
                         </li>
+
+                        <?php if (!empty($_SESSION['user_id'])) { ?>
+                        <li class="sidebar-title">My Recipe</li>
+                        <li class="sidebar-item ">
+                            <a href="index.html" class='sidebar-link'>
+                                <i class="bi bi-journal-richtext"></i>
+                                <span>List Recipe</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item ">
+                            <a href="#" data-bs-toggle="modal" data-bs-target="#exampleModalScrollable" class='sidebar-link'>
+                                <i class="bi bi-journal-plus"></i>
+                                <span>Add Recipe</span>
+                            </a>
+                        </li>
+                        <?php } ?>
+
                         <?php if (empty($_SESSION['user_id'])) { ?>
                         <li class="sidebar-title">Authentication</li>
 
@@ -118,3 +135,75 @@
                 </nav>
             </header>
             <div id="main-content">
+                
+            <?php if (!empty($_SESSION['user_id'])) { ?>
+            <!--scrolling content Modal -->
+            <div class="modal fade" id="exampleModalScrollable" tabindex="-1" role="dialog"
+                aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-scrollable modal-lg modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalScrollableTitle">
+                                Add Recipe</h5>
+                            <button type="button" class="close" data-bs-dismiss="modal"
+                                aria-label="Close">
+                                <i data-feather="x"></i>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            
+
+                        <form action="#">
+                            <div class="modal-body">
+                                <label>Email: </label>
+                                <div class="form-group">
+                                    <input type="text" placeholder="Email Address"
+                                        class="form-control">
+                                </div>
+                                <label>Password: </label>
+                                <div class="form-group">
+                                    <input type="password" placeholder="Password"
+                                        class="form-control">
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-light-secondary"
+                                    data-bs-dismiss="modal">
+                                    <i class="bx bx-x d-block d-sm-none"></i>
+                                    <span class="d-none d-sm-block">Close</span>
+                                </button>
+                                <button type="button" class="btn btn-primary ml-1"
+                                    data-bs-dismiss="modal">
+                                    <i class="bx bx-check d-block d-sm-none"></i>
+                                    <span class="d-none d-sm-block">login</span>
+                                </button>
+                            </div>
+                        </form>
+
+                        <div class="card-body">
+                            <div class="form-group mb-3">
+                                <label for="exampleFormControlTextarea1" class="form-label">Example
+                                    textarea</label>
+                                <textarea class="form-control" id="exampleFormControlTextarea1"
+                                    rows="3"></textarea>
+                            </div>
+                        </div>
+
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-light-secondary"
+                                data-bs-dismiss="modal">
+                                <i class="bx bx-x d-block d-sm-none"></i>
+                                <span class="d-none d-sm-block">Close</span>
+                            </button>
+                            <button type="button" class="btn btn-primary ml-1"
+                                data-bs-dismiss="modal">
+                                <i class="bx bx-check d-block d-sm-none"></i>
+                                <span class="d-none d-sm-block">Accept</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <?php } ?>
