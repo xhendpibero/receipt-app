@@ -4,7 +4,7 @@ session_start();
 require_once 'config.php';
 
 // The URL of your login form (adjust as needed)
-$loginUrl = '../auth-login.php';
+$loginUrl = '../login';
 
 // Helper to redirect with an error code
 function redirectWithError($code) {

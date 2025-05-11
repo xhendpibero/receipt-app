@@ -237,3 +237,111 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 </script>
+
+
+
+<script>
+        // Add this to your existing JavaScript or create a new script
+        function deleteRecipe(recipeId) {
+            // Show confirmation dialog
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'Cancel'
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    try {
+                        // Show loading state
+                        Swal.fire({
+                            title: 'Deleting...',
+                            didOpen: () => {
+                                Swal.showLoading();
+                            },
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                            allowEnterKey: false
+                        });
+
+                        // Send delete request
+                        const response = await fetch('api/delete_recipe.php', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                id: recipeId
+                            })
+                        });
+
+                        const data = await response.json();
+
+                        if (data.success) {
+                            // Show success message
+                            Swal.fire({
+                                title: 'Deleted!',
+                                text: 'Your recipe has been deleted.',
+                                icon: 'success',
+                                timer: 2000,
+                                showConfirmButton: false
+                            }).then(() => {
+                                // Reload page or update UI
+                                window.location.reload();
+                            });
+                        } else {
+                            throw new Error(data.message || 'Failed to delete recipe');
+                        }
+                    } catch (error) {
+                        console.error('Delete error:', error);
+                        Swal.fire({
+                            title: 'Error!',
+                            text: error.message || 'Failed to delete recipe',
+                            icon: 'error'
+                        });
+                    }
+                }
+            });
+        }
+
+        // Alternative version with Toastify instead of SweetAlert2
+        function deleteRecipeSimple(recipeId) {
+            if (confirm('Are you sure you want to delete this recipe?')) {
+                fetch('api/delete_recipe.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        id: recipeId
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        Toastify({
+                            text: "Recipe deleted successfully!",
+                            duration: 3000,
+                            style: { background: 'linear-gradient(to right, #00b09b, #96c93d)' }
+                        }).showToast();
+                        
+                        // Reload page or update UI
+                        setTimeout(() => window.location.reload(), 1000);
+                    } else {
+                        throw new Error(data.message || 'Failed to delete recipe');
+                    }
+                })
+                .catch(error => {
+                    console.error('Delete error:', error);
+                    Toastify({
+                        text: "Error deleting recipe!",
+                        duration: 3000,
+                        style: { background: 'linear-gradient(to right, #ff5f6d, #ffc371)' }
+                    }).showToast();
+                });
+            }
+        }
+    </script>

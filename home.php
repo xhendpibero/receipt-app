@@ -147,7 +147,7 @@
                                 <div class="row">
                                     <?php
                                         // Dummy value
-                                        $rating    = $recipe['rating_count'];
+                                        $rating    = $recipe['avg_rating'];
                                         $maxStars  = 5;
 
                                         // Compute full, half and empty stars
@@ -162,7 +162,7 @@
                                             alt="<?php echo htmlspecialchars($recipe['name']); ?>"
                                         >
 
-                                        <div class="mb-2">
+                                        <div class="mt-2">
                                             <?php
                                                 // Render full stars
                                                 for ($i = 0; $i < $fullStars; $i++) {
@@ -201,7 +201,9 @@
                                             <span class="ms-2">Category: <?php echo htmlspecialchars($recipe['category_name']); ?></span>
                                         <?php endif; ?>
                                     </div>
-                                    <button class="btn btn-light-primary">Read More</button>
+                                    <a href="./detail?id=<?= $recipe['id'] ?>">
+                                        <button class="btn btn-light-primary">Read More</button>
+                                    </a>
                                 </div>
                             </div>
                         </div>

@@ -2,7 +2,7 @@
 // 1) If already logged in, go straight to dashboard
 
 if (! empty($_SESSION['user_id'])) {
-    header('Location: dashboard');
+    header('Location: home');
     exit;
 }   
 

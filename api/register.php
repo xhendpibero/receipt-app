@@ -4,7 +4,7 @@ session_start();
 require_once 'config.php';
 
 // Change this to the URL of your signup form
-$signupUrl = 'auth-register.php';
+$signupUrl = '../register';
 
 // Helper to redirect with an error code
 function redirectWithError($code) {

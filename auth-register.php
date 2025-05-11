@@ -1,7 +1,7 @@
 <?php
 // If already logged in, skip signup
 if (! empty($_SESSION['user_id'])) {
-    header('Location: dashboard.php');
+    header('Location: home');
     exit;
 }
 
